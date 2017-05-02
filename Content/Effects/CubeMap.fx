@@ -57,7 +57,7 @@ struct VS_OUTPUT {
  *-----------------------------------*/
 
 float3 bump(float2 uv) {
-    return tex2D(bumpMap, uv*2.0).rgb;
+    return tex2D(bumpMap, uv).rgb - float3(0.5f, 0.5f, 0.5f);
     /* float2 a = uv; */
     /* float2 b = uv + float2(1.0f/512.0f, 0.0f/512.0f); */
     /* float2 c = uv + float2(0.0f/512.0f, 1.0f/512.0f); */
