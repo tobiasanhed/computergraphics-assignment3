@@ -59,8 +59,14 @@ namespace EngineName.Systems {
                     if (Mouse.GetState().X > lastMouseState.X) {
                         cameraComponent.Heading += 0.05f;
                         transform.Position = Vector3.Subtract(cameraComponent.Target, new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), cameraComponent.Height, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f))));
-
                     }
+                    if (Mouse.GetState().Y > lastMouseState.Y) {
+                        cameraComponent.Height += 1;
+                    }
+                    if (Mouse.GetState().Y < lastMouseState.Y) {
+                        cameraComponent.Height -= 1;
+                    }
+
                     lastMouseState = Mouse.GetState();
                     
                 }

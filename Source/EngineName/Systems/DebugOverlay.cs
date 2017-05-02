@@ -89,7 +89,10 @@ public sealed class DebugOverlay: EcsSystem {
         DbgStr((t, dt) => $"Time:     {t:0.00}"           );
         DbgStr((t, dt) => $"FPS:      {1.0f/dt:0.00}"     );
         DbgStr((t, dt) => $"Entities: {Scene.NumEntities}");
-    }
+        DbgStr((t, dt) => $"Press 'T' or 'G' to change strength on bumpmap");
+        DbgStr((t, dt) => $"Press 'Up' or 'Down' and Mouse to move camera");
+        DbgStr((t, dt) => $"Press 'WASD' and 'XZ' to move reflective ball.");
+        }
 
     /// <summary>Draws the overlay.</summary>
     /// <param name="t">The total game time, in seconds.</param>
