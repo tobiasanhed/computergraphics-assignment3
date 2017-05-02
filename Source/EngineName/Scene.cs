@@ -118,8 +118,20 @@ namespace EngineName {
             return EntityCounter;
         }
 
+        public void RemoveEntity(int eid) {
+            foreach (var e in Components) {
+                e.Value.Remove(eid);
+            }
+
+            m_Entities.Remove(eid);
+        }
+
+        public void AddComponent(int id, EcsComponent component, Type type) {
+            Components[type].Add(id, component);
+        }
+
         public void AddComponent<T>(int id, T component) where T : EcsComponent {
-            Components[typeof(T)].Add(id, component);
+            AddComponent(id, component, typeof (T));
         }
         public Dictionary<int, EcsComponent> GetComponents<T>() where T : EcsComponent {
             Dictionary<int, EcsComponent> r;
@@ -164,8 +176,7 @@ namespace EngineName {
     /// <summary>Draws the scene by invoking the <see cref="EcsSystem.Draw"/>
     ///          method on all systems in the scene.</summary>
     /// <param name="t">The total game time, in seconds.</param>
-    /// <param name="dt">The game time, in seconds, since the last call to this
-    ///                  method.</param>
+    /// <param name="dt">The game time, in seconds, since the last call to this method.</param>
     public virtual void Draw(float t, float dt) {
         foreach (var system in m_Systems) {
             system.Draw(t, dt);
@@ -190,6 +201,8 @@ namespace EngineName {
         Components.Add(typeof(C2DRenderable), new Dictionary<int, EcsComponent>());
         Components.Add(typeof(CCamera), new Dictionary<int, EcsComponent>());
         Components.Add(typeof(CBody), new Dictionary<int, EcsComponent>());
+        Components.Add(typeof(CParticle), new Dictionary<int, EcsComponent>());
+        Components.Add(typeof(CLogic), new Dictionary<int, EcsComponent>());
 
 #if DEBUG
         AddSystem(new Systems.FpsCounterSystem(updatesPerSec: 10));
@@ -242,8 +255,7 @@ namespace EngineName {
      *------------------------------------*/
 
     /// <summary>Updates the component cache for the entity.</summary>
-    /// <param name="entity">The entitiy to update the component cache
-    ///                      for.</param>
+    /// <param name="entity">The entitiy to update the component cache for.</param>
     internal void NotifyComponentsChanged(EcsEntity entity) {
             /*
         lock (m_EntitiesPending) {

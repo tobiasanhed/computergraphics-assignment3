@@ -9,7 +9,7 @@
 
 # Common config
 C_BINDIR = bin
-C_FLAGS  = -debug+ -define:DEBUG -define:TRACE -doc:/dev/null
+C_FLAGS  = -debug+ -define:DEBUG -define:TRACE
 
 # Engine config
 E_COMPILER   = mcs
@@ -116,6 +116,12 @@ $(C_BINDIR)/$(G_TARGET): engine
 $(G_CONTENTDIR)/Fonts/*.spritefont:
 	@echo /importer:FontDescriptionImporter   >> $(G_TMPDIR)/$(G_CONTENTFILE)
 	@echo /processor:FontDescriptionProcessor >> $(G_TMPDIR)/$(G_CONTENTFILE)
+	@echo /build:$@                           >> $(G_TMPDIR)/$(G_CONTENTFILE)
+
+$(G_CONTENTDIR)/Models/*.blend:
+	@echo /importer:OpenAssetImporter               >> $(G_TMPDIR)/$(G_CONTENTFILE)
+	@echo /processor:ModelProcessor           >> $(G_TMPDIR)/$(G_CONTENTFILE)
+	@echo /processorParam:TextureFormat=Color >> $(G_TMPDIR)/$(G_CONTENTFILE)
 	@echo /build:$@                           >> $(G_TMPDIR)/$(G_CONTENTFILE)
 
 $(G_CONTENTDIR)/Models/*.fbx:
