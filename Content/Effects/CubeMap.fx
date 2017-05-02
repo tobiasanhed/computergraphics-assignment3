@@ -30,7 +30,7 @@ sampler bumpMap = sampler_state { Texture = <BumpMap>; mipfilter = LINEAR; };
 static const float  Shininess = 10.0f;
 uniform extern float3 CamPos;
 static const float3 LightPos  = float3(0.0f, 10.0f, 1.0f);
-
+uniform extern float BumpPower;
 /*-------------------------------------
  * STRUCTS
  *-----------------------------------*/
@@ -133,7 +133,7 @@ float2 cubeMap(float3 p, out int i) {
 
 void psMain(in VS_OUTPUT vsOut, out PS_OUTPUT psOut) {
     // TODO: Camera pos should not be hardcoded here!!!
-    float3 n = normalize(vsOut.norm + 0.2f*bump(vsOut.texCoord));
+    float3 n = normalize(vsOut.norm + BumpPower * bump(vsOut.texCoord));
     float3 v = normalize(vsOut.worldPos.xyz - CamPos);
     float3 h = reflect(v, n);
     float3 l = normalize(LightPos - vsOut.worldPos.xyz);

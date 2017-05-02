@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using EngineName.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace EngineName.Systems
 {
     public class RenderingSystem : EcsSystem {
+        private float bump = 0f;
         private GraphicsDevice mGraphicsDevice;
 
         public override void Init() {
@@ -19,6 +21,10 @@ namespace EngineName.Systems
             base.Init();
         }
         public override void Update(float t, float dt) {
+            if (Keyboard.GetState().IsKeyDown(Keys.T))
+                bump += 0.01f;
+            if(Keyboard.GetState().IsKeyDown(Keys.G))
+                bump -= 0.01f;
             base.Update(t, dt);
         }
         public override void Draw(float t, float dt) {
@@ -69,6 +75,7 @@ namespace EngineName.Systems
                         model.material.View  = camera.View;
                         model.material.Proj  = camera.Projection;
                         model.material.Prerender();
+                        model.material.mEffect.Parameters["BumpPower"].SetValue(bump);
 
                         var device = Game1.Inst.GraphicsDevice;
 
