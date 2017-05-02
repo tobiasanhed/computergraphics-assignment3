@@ -16,6 +16,7 @@ namespace EngineName.Systems {
     public class InputSystem : EcsSystem {
         private MapSystem _mapSystem;
         private const float CAMERASPEED = 0.1f;
+        private MouseState lastMouseState;
 
         public InputSystem() { }
 
@@ -25,6 +26,7 @@ namespace EngineName.Systems {
 
         public override void Update(float t, float dt){
             KeyboardState currentState = Keyboard.GetState();
+
             if(currentState.IsKeyDown(Keys.Escape))
                 Game1.Inst.Exit();
 
@@ -40,7 +42,8 @@ namespace EngineName.Systems {
                     CCamera cameraComponent = (CCamera)Game1.Inst.Scene.GetComponentFromEntity<CCamera>(input.Key);
 
 
-
+                    if (lastMouseState == null)
+                        lastMouseState = Mouse.GetState();
                     if (currentState.IsKeyDown(inputValue.CameraMovementForward)){
                         transform.Position     += CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
                         cameraComponent.Target += CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
@@ -49,16 +52,16 @@ namespace EngineName.Systems {
                         transform.Position     -= CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
                         cameraComponent.Target -= CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
                     }
-                    if (currentState.IsKeyDown(inputValue.CameraMovementLeft)){
+                    if (Mouse.GetState().X < lastMouseState.X){
                         cameraComponent.Heading -= 0.05f;
                         transform.Position = Vector3.Subtract(cameraComponent.Target, new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), cameraComponent.Height, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f))));
                     }       
-                    if (currentState.IsKeyDown(inputValue.CameraMovementRight)){
+                    if (Mouse.GetState().X > lastMouseState.X) {
                         cameraComponent.Heading += 0.05f;
                         transform.Position = Vector3.Subtract(cameraComponent.Target, new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), cameraComponent.Height, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f))));
 
                     }
-
+                    lastMouseState = Mouse.GetState();
                     
                 }
                 if (!Game1.Inst.Scene.EntityHasComponent<CBody>(input.Key)) {

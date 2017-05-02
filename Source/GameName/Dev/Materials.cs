@@ -33,7 +33,8 @@ public sealed class Materials: Scene {
 
     /// <summary>The skybox renderer.</summary>
     private SkyBoxSystem mSkybox;
-
+    private EnvMapMaterial envMap;
+    private CTransform camera;
     //--------------------------------------
     // PUBLIC METHODS
     //--------------------------------------
@@ -72,6 +73,7 @@ public sealed class Materials: Scene {
     /// <param name="dt">The game time, in seconds, since the last call to this method.</param>
     public override void Draw(float t, float dt)  {
         Game1.Inst.GraphicsDevice.Clear(Color.White);
+            envMap.SetCameraPos(camera.Position);
         base.Draw(t, dt);
     }
 
@@ -97,7 +99,6 @@ public sealed class Materials: Scene {
                                                      Rotation = Matrix.Identity,
                                                      Scale    = r*Vector3.One });
 
-        EnvMapMaterial envMap = null;
 
         if (reflective) {
             var rot = 0.0f;
@@ -143,7 +144,7 @@ public sealed class Materials: Scene {
                 Distance = 21
             });
 
-        AddComponent(cam, new CTransform { Position = new Vector3(9.0f, 12.0f, 21f),
+        AddComponent(cam, camera = new CTransform { Position = new Vector3(9.0f, 12.0f, 21f),
                                            Rotation = Matrix.Identity,
                                            Scale    = Vector3.One });
         AddComponent(cam, new CInput());
