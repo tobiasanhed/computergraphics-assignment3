@@ -94,7 +94,10 @@ namespace EngineName.Systems
                         foreach (BasicEffect effect in mesh.Effects) {
                             effect.EnableDefaultLighting();
                             effect.PreferPerPixelLighting = true;
-
+                            effect.FogEnabled = true;
+                            effect.FogStart = 10.0f;
+                            effect.FogEnd = 100f;
+                            effect.FogColor = new Vector3(0.4f, 0.7f, 1.0f);
                             effect.Projection = camera.Projection;
                             effect.View = camera.View;
                             effect.World = mesh.ParentBone.Transform * transform.Frame;
