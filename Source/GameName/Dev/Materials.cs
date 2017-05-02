@@ -60,7 +60,7 @@ public sealed class Materials: Scene {
         for (var i = 0; i < 30; i++) {
             var r = i == 0 ? 6.0f : 1.0f;
             CreateBall(new Vector3(0.9f*i - 3.5f, 0.3f*i, 0.7f*i), // Position
-                       new Vector3(         3.0f*(i-4), 2.0f*i  , 3.0f-i),   // Velocity
+                       new Vector3(         0f,0f,0f),   // Velocity
                        r,                                          // Radius
                        i == 0);                                    // Reflective
         }
@@ -136,13 +136,17 @@ public sealed class Materials: Scene {
         var fovRad = fovDeg*2.0f*MathHelper.Pi/360.0f;
         var proj   = Matrix.CreatePerspectiveFieldOfView(fovRad, aspect, zNear, zFar);
 
-        AddComponent(cam, new CCamera { ClipProjection = proj,
-                                        Projection     = proj });
+            AddComponent(cam, new CCamera { ClipProjection = proj,
+                Projection = proj,
+                Heading = (float)-Math.Atan2(21f, -9f),
+                Height = -12,
+                Distance = 21
+            });
 
-        AddComponent(cam, new CTransform { Position = new Vector3(9.0f, 12.0f, 18.0f),
+        AddComponent(cam, new CTransform { Position = new Vector3(9.0f, 12.0f, 21f),
                                            Rotation = Matrix.Identity,
                                            Scale    = Vector3.One });
-
+        AddComponent(cam, new CInput());
         return cam;
     }
 }
