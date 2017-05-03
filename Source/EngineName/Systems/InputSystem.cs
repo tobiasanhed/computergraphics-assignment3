@@ -52,11 +52,11 @@ namespace EngineName.Systems {
                         transform.Position     -= CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
                         cameraComponent.Target -= CAMERASPEED * new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), 0, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f)));
                     }
-                    if (Mouse.GetState().X < lastMouseState.X){
+                    if (Mouse.GetState().X < lastMouseState.X || currentState.IsKeyDown(inputValue.CameraMovementLeft)){
                         cameraComponent.Heading -= 0.05f;
                         transform.Position = Vector3.Subtract(cameraComponent.Target, new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), cameraComponent.Height, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f))));
                     }       
-                    if (Mouse.GetState().X > lastMouseState.X) {
+                    if (Mouse.GetState().X > lastMouseState.X || currentState.IsKeyDown(inputValue.CameraMovementRight)) {
                         cameraComponent.Heading += 0.05f;
                         transform.Position = Vector3.Subtract(cameraComponent.Target, new Vector3((float)(cameraComponent.Distance * Math.Sin(cameraComponent.Heading + Math.PI * 0.5f)), cameraComponent.Height, (float)((-cameraComponent.Distance) * Math.Cos(cameraComponent.Heading + Math.PI * 0.5f))));
                     }

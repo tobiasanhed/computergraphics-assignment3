@@ -15,7 +15,7 @@ namespace EngineName.Systems
     public class RenderingSystem : EcsSystem {
         private float bump = 0f;
         private GraphicsDevice mGraphicsDevice;
-
+        private Vector3 lightPos = new Vector3(100.0f, -500.0f, 100.0f);
         public override void Init() {
             mGraphicsDevice = Game1.Inst.GraphicsDevice;
             base.Init();
@@ -76,7 +76,10 @@ namespace EngineName.Systems
                         model.material.Proj  = camera.Projection;
                         model.material.Prerender();
                         model.material.mEffect.Parameters["BumpPower"].SetValue(bump);
-
+                        model.material.mEffect.Parameters["FogColor"].SetValue(new Vector4(0.4f, 0.7f, 1.0f, 1.0f));
+                        model.material.mEffect.Parameters["FogStart"].SetValue(20.0f);
+                        model.material.mEffect.Parameters["FogEnd"].SetValue(200.0f);
+                        model.material.mEffect.Parameters["LightPos"].SetValue(lightPos);
                         var device = Game1.Inst.GraphicsDevice;
 
                         for (var i = 0; i < mesh.MeshParts.Count; i++) {
@@ -99,11 +102,20 @@ namespace EngineName.Systems
                     }
                     else {
                         foreach (BasicEffect effect in mesh.Effects) {
-                            effect.EnableDefaultLighting();
+                            //effect.EnableDefaultLighting();
+                            effect.LightingEnabled = true;
+                            effect.DirectionalLight0.Enabled = true;
+                            effect.AmbientLightColor = new Vector3(0.1f, 0.1f, 0.1f);
+                            effect.EmissiveColor = new Vector3(0.1f, 0.1f, 0.1f);
+
+                            effect.DirectionalLight0.DiffuseColor = new Vector3(0.1f, 0.1f, 0.1f);
+                            effect.DirectionalLight0.Direction = lightPos;
+                            effect.SpecularColor = new Vector3(1, 1, 1);
+
                             effect.PreferPerPixelLighting = true;
                             effect.FogEnabled = true;
-                            effect.FogStart = 10.0f;
-                            effect.FogEnd = 100f;
+                            effect.FogStart = 20.0f;
+                            effect.FogEnd = 200.0f;
                             effect.FogColor = new Vector3(0.4f, 0.7f, 1.0f);
                             effect.Projection = camera.Projection;
                             effect.View = camera.View;

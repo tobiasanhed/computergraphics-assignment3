@@ -29,8 +29,12 @@ sampler bumpMap = sampler_state { Texture = <BumpMap>; mipfilter = LINEAR; };
 // TODO: These should really be uniforms.
 static const float  Shininess = 10.0f;
 uniform extern float3 CamPos;
-static const float3 LightPos  = float3(0.0f, 10.0f, 1.0f);
+uniform extern float3 LightPos;
 uniform extern float BumpPower;
+uniform extern float4 FogColor;
+uniform extern float FogStart;
+uniform extern float FogEnd;
+
 /*-------------------------------------
  * STRUCTS
  *-----------------------------------*/
@@ -136,7 +140,9 @@ void psMain(in VS_OUTPUT vsOut, out PS_OUTPUT psOut) {
     float3 n = normalize(vsOut.norm + BumpPower * bump(vsOut.texCoord));
     float3 v = normalize(vsOut.worldPos.xyz - CamPos);
     float3 h = reflect(v, n);
-    float3 l = normalize(LightPos - vsOut.worldPos.xyz);
+    float3 newLight = LightPos;
+    newLight.y *= -1.0;
+    float3 l = normalize(newLight - vsOut.worldPos.xyz);
     float3 r = reflect(l, n);
 
     // Phong specularity
@@ -153,7 +159,16 @@ void psMain(in VS_OUTPUT vsOut, out PS_OUTPUT psOut) {
     else if (i == 3) psOut.color = tex2D(envMap3, tc).rgba;
     else if (i == 4) psOut.color = tex2D(envMap4, tc).rgba;
     else if (i == 5) psOut.color = tex2D(envMap5, tc).rgba;
+    
+    float dist = length(vsOut.worldPos.xyz - CamPos);
+    
+    dist = (dist - FogStart) / (FogEnd - FogStart);
 
+    float x = min(max(0.0f, dist), 1.0f);
+    float y = 1.0 - x;
+
+    psOut.color = y * psOut.color + x * FogColor;
+    psOut.color.a = 1.0;
     psOut.color += float4(s, 0.0f);
 }
 
