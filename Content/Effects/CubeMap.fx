@@ -29,7 +29,8 @@ sampler bumpMap = sampler_state { Texture = <BumpMap>; mipfilter = LINEAR; };
 // TODO: These should really be uniforms.
 static const float  Shininess = 10.0f;
 uniform extern float3 CamPos;
-uniform extern float3 LightPos;
+//static const float3 LightPos = float3(10f, -100.0f, 1.0f);
+uniform extern float3 LightDir;
 uniform extern float BumpPower;
 uniform extern float4 FogColor;
 uniform extern float FogStart;
@@ -140,8 +141,9 @@ void psMain(in VS_OUTPUT vsOut, out PS_OUTPUT psOut) {
     float3 n = normalize(vsOut.norm + BumpPower * bump(vsOut.texCoord));
     float3 v = normalize(vsOut.worldPos.xyz - CamPos);
     float3 h = reflect(v, n);
-    float3 newLight = LightPos;
-    newLight.y *= -1.0;
+    float3 newLight = LightDir;
+    //newLight.y *= -1.0;
+    newLight *= -100.0;
     float3 l = normalize(newLight - vsOut.worldPos.xyz);
     float3 r = reflect(l, n);
 
